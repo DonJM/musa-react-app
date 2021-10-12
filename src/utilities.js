@@ -1,7 +1,11 @@
 // Define our labelmap
 const labelMap = {
-    1:{name:'Fresh', color:'red'},
-    2:{name:'Rotten', color:'yellow'},
+    1:{name:'Fresh', color:'green'},
+    2:{name:'Fresh', color:'green'},
+    3:{name:'Unripe', color:'yellow'},
+    4:{name:'Ripe', color:'orange'},
+    5:{name:'Overripe', color:'gray'},
+    6:{name:'Rotten', color:'pink'},
 }
 
 // Define a drawing function
@@ -14,7 +18,7 @@ export const drawRect = (boxes, classes, scores, threshold, imgWidth, imgHeight,
             
             // Set styling
             ctx.strokeStyle = labelMap[text]['color']
-            ctx.lineWidth = 10
+            ctx.lineWidth = 3
             ctx.fillStyle = 'white'
             ctx.font = '30px Arial'         
             

@@ -5,8 +5,8 @@ body {
 #hero div {
     cursor: pointer;
 }
-
-/* @media screen and (min-width: 0px) and (max-width: 320px){
+/* 
+@media screen and (min-width: 0px) and (max-width: 320px){
     #canvas {
         width: 320px;
     }
@@ -31,7 +31,7 @@ body {
     #video {
         width: 424px;
     }
-} */
+}
 
 
 @media screen and (min-width: 426px) and (max-width: 575.98px) {
@@ -64,4 +64,4 @@ body {
     #root > div > div:nth-child(2) > div > div {
         width: 600px;
     }
-}
+} */

@@ -14,13 +14,15 @@ export function CamDetector() {
     // Main function
     const runCoco = async () => {
         // 3. TODO - Load network 
-        const net = await tf.loadGraphModel('https://fclb-tfod-cloud-storage-v2.s3.jp-tok.cloud-object-storage.appdomain.cloud/model.json')
+        const net = await tf.loadGraphModel(process.env.REACT_APP_MODEL_URL)
         
         // Loop and detect hands
         setInterval(() => {
         detect(net);
         }, 16.7);
     };
+
+    // ibmcloud cos bucket-cors-put --bucket ssd-mobilenet-v2-fpnlite-320x320 --cors-configuration file://corsconfig.json
 
     const detect = async (net) => {
         // Check data is available
@@ -43,21 +45,22 @@ export function CamDetector() {
     
           // 4. TODO - Make Detections
           const img = tf.browser.fromPixels(video)
-          const resized = tf.image.resizeBilinear(img, [640,480])
+          const resized = tf.image.resizeBilinear(img, [320,320])
           const casted = resized.cast('int32')
           const expanded = casted.expandDims(0)
           const obj = await net.executeAsync(expanded)
-    
-          const boxes = await obj[4].array()
-          const classes = await obj[5].array()
-          const scores = await obj[3].array()
+          
+       
+            const boxes = await obj[6].array()
+            const classes = await obj[0].array()
+            const scores = await obj[7].array() 
         
           // Draw mesh
           const ctx = canvasRef.current.getContext("2d");
     
-          // 5. TODO - Update drawing utility
-          // drawSomething(obj, ctx)  
-          requestAnimationFrame(()=>{drawRect(boxes[0], classes[0], scores[0], 0.9, videoWidth, videoHeight, ctx)}); 
+        //   5. TODO - Update drawing utility
+        //   drawSomething(obj, ctx)  
+          requestAnimationFrame(()=>{drawRect(boxes[0], classes[0], scores[0], 0.45, videoWidth, videoHeight, ctx)}); 
     
           tf.dispose(img)
           tf.dispose(resized)
@@ -72,30 +75,24 @@ export function CamDetector() {
 
     return (
         <div class="position-absolute top-50 start-50 translate-middle">
-            {/* <video width={640} height={480} autoPlay className="position-absolute top-50 start-50 translate-middle rounded"
-                id="video"
-                style={{display:"none"}}
-            >
-                <source  src="video.mp4" type="video/mp4"/>
-            </video> */}
-
             <Webcam 
                 ref={webcamRef}
                 muted={true}
-                width={640} 
-                height={480} 
-                autoPlay 
                 className="position-absolute top-50 start-50 translate-middle rounded"
                 id="video"
-                style={{display:"none"}}
+                style={{
+                  display:"none",
+                  width:320,
+                  height:320
+                }}
             />
 
             <canvas
                 ref={canvasRef}
                 className="text-center rounded position-relative"
                 style={{
-                    height: 480,
-                    width: 640,
+                    height: 320,
+                    width: 320,
                     display: "none"
                 }}
 
