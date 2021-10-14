@@ -45,7 +45,7 @@ export function CamDetector() {
     
           // 4. TODO - Make Detections
           const img = tf.browser.fromPixels(video)
-          const resized = tf.image.resizeBilinear(img, [320,320])
+          const resized = tf.image.resizeBilinear(img, [640,480])
           const casted = resized.cast('int32')
           const expanded = casted.expandDims(0)
           const obj = await net.executeAsync(expanded)
@@ -82,8 +82,8 @@ export function CamDetector() {
                 id="video"
                 style={{
                   display:"none",
-                  width:320,
-                  height:320
+                  width:640,
+                  height:480
                 }}
             />
 
@@ -91,8 +91,8 @@ export function CamDetector() {
                 ref={canvasRef}
                 className="text-center rounded position-relative"
                 style={{
-                    height: 320,
-                    width: 320,
+                    height: 480,
+                    width: 640,
                     display: "none"
                 }}
 
