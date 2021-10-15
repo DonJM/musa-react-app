@@ -13,17 +13,29 @@ export function CamDetector() {
     const getDeviceType = () => {
         const ua = navigator.userAgent;
         if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
-          return [480, 320];
+          const videoConstraints = {
+            width: 320,
+            height: 320,
+            facingMode: "environment"
+          };
+          return videoConstraints;
         }
         if (
           /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)
         ) {
-          return [320, 480];
+          const videoConstraints = {
+            width: 320,
+            height: 320,
+            facingMode: "environment"
+          };
+          return videoConstraints;
         }
-        return [640, 480];
-      };
-
-    const sizes = getDeviceType();
+        const videoConstraints = {
+          width: 640,
+          height: 480
+        };
+        return videoConstraints;
+    };
 
 
     // Main function
@@ -60,7 +72,7 @@ export function CamDetector() {
     
           // 4. TODO - Make Detections
           const img = tf.browser.fromPixels(video)
-          const resized = tf.image.resizeBilinear(img, sizes)
+          const resized = tf.image.resizeBilinear(img, [getDeviceType()['width'], getDeviceType()['height']])
           const casted = resized.cast('int32')
           const expanded = casted.expandDims(0)
           const obj = await net.executeAsync(expanded)
@@ -96,9 +108,7 @@ export function CamDetector() {
                 muted={true}
                 className="position-absolute top-50 start-50 translate-middle rounded"
                 id="video"
-                width= {sizes[0]}
-                height= {sizes[1]}
-                facingmode = {"environment"}
+                videoConstraints={getDeviceType()}
                 style={{
                   display:"none",
                   
@@ -108,8 +118,8 @@ export function CamDetector() {
             <canvas
                 ref={canvasRef}
                 className="text-center rounded position-relative"
-                width= {sizes[0]}
-                height= {sizes[1]}
+                width= {getDeviceType()['width']}
+                height= {getDeviceType()['height']}
                 style={{
                     display: "none"
                 }}
