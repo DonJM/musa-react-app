@@ -10,6 +10,21 @@ import React, { useRef, useEffect } from "react";
 export function CamDetector() {
     const webcamRef = useRef(null);
     const canvasRef = useRef(null);
+    const getDeviceType = () => {
+        const ua = navigator.userAgent;
+        if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+          return [480, 320];
+        }
+        if (
+          /Mobile|iP(hone|od)|Android|BlackBerry|IEMobile|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)
+        ) {
+          return [320, 480];
+        }
+        return [640, 480];
+      };
+
+    const sizes = getDeviceType();
+
 
     // Main function
     const runCoco = async () => {
@@ -45,7 +60,7 @@ export function CamDetector() {
     
           // 4. TODO - Make Detections
           const img = tf.browser.fromPixels(video)
-          const resized = tf.image.resizeBilinear(img, [640,480])
+          const resized = tf.image.resizeBilinear(img, sizes)
           const casted = resized.cast('int32')
           const expanded = casted.expandDims(0)
           const obj = await net.executeAsync(expanded)
@@ -72,6 +87,7 @@ export function CamDetector() {
       };
     
       useEffect(()=>{runCoco()},[]);
+    
 
     return (
         <div class="position-absolute top-50 start-50 translate-middle">
@@ -80,19 +96,21 @@ export function CamDetector() {
                 muted={true}
                 className="position-absolute top-50 start-50 translate-middle rounded"
                 id="video"
+                width= {sizes[0]}
+                height= {sizes[1]}
+                facingmode = {"environment"}
                 style={{
                   display:"none",
-                  width:640,
-                  height:480
+                  
                 }}
             />
 
             <canvas
                 ref={canvasRef}
                 className="text-center rounded position-relative"
+                width= {sizes[0]}
+                height= {sizes[1]}
                 style={{
-                    height: 480,
-                    width: 640,
                     display: "none"
                 }}
 
